@@ -146,14 +146,14 @@ case "${BUILD_RISCV_XLEN}" in
 	;;
 64b)
 	BUILD_XVISOR_ARCH="riscv"
-	BUILD_XVISOR_CROSS_COMPILE_PREFERRED=riscv64-linux-
+	BUILD_XVISOR_CROSS_COMPILE_PREFERRED=riscv64-unknown-linux-gnu-
 	BUILD_LINUX_ARCH="riscv"
 	if [ "${BUILD_GUEST_TYPE}" == "virt32" ]; then
 		BUILD_LINUX_CROSS_COMPILE_PREFERRED=riscv32-unknown-linux-gnu-
 		BUILD_BUSYBOX_CROSS_COMPILE_PREFERRED=riscv32-unknown-linux-gnu-
 	else
-		BUILD_LINUX_CROSS_COMPILE_PREFERRED=riscv64-linux-
-		BUILD_BUSYBOX_CROSS_COMPILE_PREFERRED=riscv64-linux-
+		BUILD_LINUX_CROSS_COMPILE_PREFERRED=riscv64-unknown-linux-gnu-
+		BUILD_BUSYBOX_CROSS_COMPILE_PREFERRED=riscv64-unknown-linux-gnu-
 	fi
 	;;
 *)

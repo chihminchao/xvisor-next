@@ -402,6 +402,7 @@ if [ ! -f ${BUILD_BUSYBOX_OUTPUT_PATH}/_install/bin/busybox ]; then
 	mkdir -p ${BUILD_BUSYBOX_OUTPUT_PATH}/_install/dev
 	mkdir -p ${BUILD_BUSYBOX_OUTPUT_PATH}/_install/proc
 	mkdir -p ${BUILD_BUSYBOX_OUTPUT_PATH}/_install/sys
+	mkdir -p ${BUILD_BUSYBOX_OUTPUT_PATH}/_install/apps
 	ln -sf /sbin/init ${BUILD_BUSYBOX_OUTPUT_PATH}/_install/init
 	cp -f ${BUILD_XVISOR_SOURCE_PATH}/tests/common/busybox/fstab ${BUILD_BUSYBOX_OUTPUT_PATH}/_install/etc/fstab
 	cp -f ${BUILD_XVISOR_SOURCE_PATH}/tests/common/busybox/rcS ${BUILD_BUSYBOX_OUTPUT_PATH}/_install/etc/init.d/rcS

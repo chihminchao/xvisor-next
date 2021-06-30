@@ -23,6 +23,7 @@ function usage()
 	echo "     -b <busybox_version>     Guest Busybox version (Optional)"
 	echo "     -v                       Only print build configuration (Optional)"
 	echo "     -x                       Only build Xvisor (Optional)"
+	echo "     -k                       Stop at building busybox (Optional)"
 	echo "     -q <xvisor_cross_compile>  Cross compile prefix for Xvisor (Optional)"
 	echo "     -y <linux_cross_compile>   Cross compile prefix for Linux (Optional)"
 	echo "     -z <busybox_cross_compile> Cross compile prefix for Busybox (Optional)"
@@ -74,7 +75,7 @@ BUILD_BUSYBOX_OUTPUT_PATH=
 BUILD_BUSYBOX_ROOTFS_CPIO_PATH=
 BUILD_BUSYBOX_ROOTFS_EXT2_PATH=
 
-while getopts ":a:b:d:g:s:h:vj:l:i:o:p:q:xy:z:" o; do
+while getopts ":a:b:d:g:s:h:vj:l:i:o:p:q:xy:z:k" o; do
 	case "${o}" in
 	a)
 		BUILD_RISCV_XLEN=${OPTARG}
@@ -123,6 +124,9 @@ while getopts ":a:b:d:g:s:h:vj:l:i:o:p:q:xy:z:" o; do
 		;;
 	x)
 		BUILD_XVISOR_ONLY="yes"
+		;;
+	k)
+		BUILD_BUSYBOX_ROOTFS_ONLY="yes"
 		;;
 	*)
 		usage
@@ -321,6 +325,7 @@ echo "busybox_oldconfig_path = ${BUILD_BUSYBOX_OLDCONFIG_PATH}"
 echo "busybox_output_path = ${BUILD_BUSYBOX_OUTPUT_PATH}"
 echo "busybox_rootfs_cpio_path = ${BUILD_BUSYBOX_ROOTFS_CPIO_PATH}"
 echo "busybox_rootfs_ext2_path = ${BUILD_BUSYBOX_ROOTFS_EXT2_PATH}"
+echo "busybox_rootfs_only = ${BUILD_BUSYBOX_ROOTFS_ONLY}"
 
 if [ "${BUILD_PRINT_CONFIG_ONLY}" == "yes" ]; then
 	exit 0
@@ -422,6 +427,10 @@ if [ ! -f ${BUILD_BUSYBOX_ROOTFS_CPIO_PATH} ]; then
 fi
 if [ ! -f ${BUILD_BUSYBOX_ROOTFS_EXT2_PATH} ]; then
 	genext2fs -b 6500 -N 1024 -U -d ${BUILD_BUSYBOX_OUTPUT_PATH}/_install ${BUILD_BUSYBOX_ROOTFS_EXT2_PATH}
+fi
+
+if [ "${BUILD_BUSYBOX_ROOTFS_ONLY}" == "yes" ]; then
+	exit 0
 fi
 
 echo "=== Create Xvisor Disk Image for Linux Guest ==="

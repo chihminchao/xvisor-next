@@ -381,7 +381,7 @@ fi
 
 echo "=== Untaring Linux and Busybox tarballs ==="
 mkdir -p ${BUILD_GUEST_OUTPUT_PATH}
-if [ ! -d ${BUILD_LINUX_SOURCE_PATH} ]; then
+if [ ! -d ${BUILD_LINUX_SOURCE_PATH} && ! ${BUILD_BUSYBOX_ROOTFS_ONLY} == "yes" ]; then
 	tar -C ${BUILD_GUEST_OUTPUT_PATH} -xvf ${BUILD_LINUX_TARBALL_PATH}
 fi
 if [ ! -d ${BUILD_BUSYBOX_OUTPUT_PATH} ]; then

@@ -389,19 +389,6 @@ if [ ! -d ${BUILD_BUSYBOX_OUTPUT_PATH} ]; then
 	mv ${BUILD_GUEST_OUTPUT_PATH}/busybox-${BUILD_BUSYBOX_VERSION} ${BUILD_BUSYBOX_OUTPUT_PATH}
 fi
 
-echo "=== Configure and Build Linux ==="
-export ARCH=${BUILD_LINUX_ARCH}
-export CROSS_COMPILE=${BUILD_LINUX_CROSS_COMPILE}
-mkdir -p ${BUILD_LINUX_OUTPUT_PATH}
-if [ ! -f ${BUILD_LINUX_OUTPUT_PATH}/.config ]; then
-	cp -f ${BUILD_LINUX_SOURCE_PATH}/arch/${BUILD_LINUX_ARCH}/configs/${BUILD_LINUX_DEFCONFIG} ${BUILD_LINUX_SOURCE_PATH}/arch/${BUILD_LINUX_ARCH}/configs/tmp-${BUILD_GUEST_TYPE}_defconfig
-	${BUILD_XVISOR_SOURCE_PATH}/tests/common/scripts/update-linux-defconfig.sh -p ${BUILD_LINUX_SOURCE_PATH}/arch/${BUILD_LINUX_ARCH}/configs/tmp-${BUILD_GUEST_TYPE}_defconfig -f ${BUILD_LINUX_DEFCONFIG_EXTRA}
-	make ARCH=${BUILD_LINUX_ARCH} -C ${BUILD_LINUX_SOURCE_PATH} O=${BUILD_LINUX_OUTPUT_PATH} tmp-${BUILD_GUEST_TYPE}_defconfig
-fi
-if [ ! -f ${BUILD_LINUX_OUTPUT_PATH}/vmlinux ]; then
-	make ARCH=${BUILD_LINUX_ARCH} -C ${BUILD_LINUX_SOURCE_PATH} O=${BUILD_LINUX_OUTPUT_PATH} -j ${BUILD_NUM_THREADS} Image dtbs
-fi
-
 echo "=== Configure and Build Busybox ==="
 export ARCH=${BUILD_LINUX_ARCH}
 export CROSS_COMPILE=${BUILD_BUSYBOX_CROSS_COMPILE}
@@ -431,6 +418,19 @@ fi
 
 if [ "${BUILD_BUSYBOX_ROOTFS_ONLY}" == "yes" ]; then
 	exit 0
+fi
+
+echo "=== Configure and Build Linux ==="
+export ARCH=${BUILD_LINUX_ARCH}
+export CROSS_COMPILE=${BUILD_LINUX_CROSS_COMPILE}
+mkdir -p ${BUILD_LINUX_OUTPUT_PATH}
+if [ ! -f ${BUILD_LINUX_OUTPUT_PATH}/.config ]; then
+	cp -f ${BUILD_LINUX_SOURCE_PATH}/arch/${BUILD_LINUX_ARCH}/configs/${BUILD_LINUX_DEFCONFIG} ${BUILD_LINUX_SOURCE_PATH}/arch/${BUILD_LINUX_ARCH}/configs/tmp-${BUILD_GUEST_TYPE}_defconfig
+	${BUILD_XVISOR_SOURCE_PATH}/tests/common/scripts/update-linux-defconfig.sh -p ${BUILD_LINUX_SOURCE_PATH}/arch/${BUILD_LINUX_ARCH}/configs/tmp-${BUILD_GUEST_TYPE}_defconfig -f ${BUILD_LINUX_DEFCONFIG_EXTRA}
+	make ARCH=${BUILD_LINUX_ARCH} -C ${BUILD_LINUX_SOURCE_PATH} O=${BUILD_LINUX_OUTPUT_PATH} tmp-${BUILD_GUEST_TYPE}_defconfig
+fi
+if [ ! -f ${BUILD_LINUX_OUTPUT_PATH}/vmlinux ]; then
+	make ARCH=${BUILD_LINUX_ARCH} -C ${BUILD_LINUX_SOURCE_PATH} O=${BUILD_LINUX_OUTPUT_PATH} -j ${BUILD_NUM_THREADS} Image dtbs
 fi
 
 echo "=== Create Xvisor Disk Image for Linux Guest ==="
